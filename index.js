@@ -1,7 +1,10 @@
+const morgan = require("morgan");
 const Joi = require("joi");
 const express = require("express");
 const app = express();
+
 app.use(express.json());
+app.use(morgan("combined"));
 
 const genres = [
   { id: 1, name: "Action" },

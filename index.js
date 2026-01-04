@@ -38,7 +38,22 @@ app.post("/api/genres", (request, response) => {
   response.status(201).send(newGenre);
 });
 
+app.put("/api/genres/:id", (request, response) => {
+  const genre = genres.find(
+    (genre) => genre.id === parseInt(request.params.id),
+  );
+  if (!genre)
+    return response
+      .status(404)
+      .send("The genre with the given id was not found");
 
+  const { error } = validateGenre(request.body);
+  if (error) return response.status(400).send(error.details[0].message);
+
+  genre.name = request.body.name;
+
+  response.status(200).send(genre);
+});
 
 function validateGenre(genre) {
   const schema = {

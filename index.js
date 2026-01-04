@@ -25,11 +25,7 @@ app.get("/api/genres/:id", (request, response) => {
 });
 
 app.post("/api/genres", (request, response) => {
-  const schema = {
-    name: Joi.string().min(3).required(),
-  };
-
-  const { error } = Joi.validate(request.body, schema);
+  const { error } = validateGenre(request.body);
   if (error) return response.status(400).send(error.details[0].message);
 
   const newGenre = {
@@ -41,6 +37,15 @@ app.post("/api/genres", (request, response) => {
 
   response.status(201).send(newGenre);
 });
+
+
+
+function validateGenre(genre) {
+  const schema = {
+    name: Joi.string().min(3).required(),
+  };
+  return Joi.validate(genre, schema);
+}
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

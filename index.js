@@ -1,5 +1,7 @@
+const Joi = require("joi");
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 const genres = [
   { id: 1, name: "Action" },
@@ -20,6 +22,24 @@ app.get("/api/genres/:id", (request, response) => {
       .status(404)
       .send("The genre with the given id was not found.");
   response.status(200).send(genre);
+});
+
+app.post("/api/genres", (request, response) => {
+  const schema = {
+    name: Joi.string().min(3).required(),
+  };
+
+  const { error } = Joi.validate(request.body, schema);
+  if (error) return response.status(400).send(error.details[0].message);
+
+  const newGenre = {
+    id: genres.length + 1,
+    name: request.body.name,
+  };
+
+  genres.push(newGenre);
+
+  response.status(201).send(newGenre);
 });
 
 const port = process.env.PORT || 3000;

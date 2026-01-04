@@ -55,6 +55,21 @@ app.put("/api/genres/:id", (request, response) => {
   response.status(200).send(genre);
 });
 
+app.delete("/api/genres/:id", (request, response) => {
+  const genre = genres.find(
+    (genre) => genre.id === parseInt(request.params.id),
+  );
+  if (!genre)
+    return response
+      .status(404)
+      .send("The genre with the given id was not found");
+
+  const genreIndex = genres.indexOf(genre);
+  genres.splice(genreIndex, 1);
+
+  response.status(200).send(genre);
+});
+
 function validateGenre(genre) {
   const schema = {
     name: Joi.string().min(3).required(),
